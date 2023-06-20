@@ -1,0 +1,63 @@
+body {
+    width: 300px;
+    font-family: Arial, sans-serif;
+}
+
+#link-container {
+    margin-top: 20px;
+}
+
+.link-group {
+    margin-bottom: 10px;
+}
+
+.link-item {
+    cursor: move;
+    display: flex;
+    align-items: flex-start;
+}
+
+.link-item:hover .delete-button {
+    display: inline;
+}
+
+.delete-button {
+    margin-right: 10px;
+    display: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#add-link {
+    border: none;
+}
+
+#add-group-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+#remove-group {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+#reset {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    /* optional: add margin-top for spacing */
+}

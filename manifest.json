@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "Link Manager",
+    "description": "An extension to store and organize links",
+    "version": "1.0",
+    "permissions": ["storage"],
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "action": {
+        "default_icon": "icon.png",
+        "default_title": "Tab manager",
+        "default_popup": "popup.html"
+    }
+}
