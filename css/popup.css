@@ -1,3 +1,7 @@
+.slogan {
+    text-align: center;
+}
+
 body {
     width: 500px;
     font-family: Arial, sans-serif;
@@ -14,14 +18,10 @@ body {
     margin-right: 10px;
 }
 
-.align-center {
-    display: flex;
-    justify-content: center;
-}
 
-#link-container {
+/* #link-container {
     margin-top: 20px;
-}
+} */
 
 .link-group {
     margin-bottom: 10px;
@@ -51,34 +51,125 @@ body {
 
 #add-group-button {
     border: none;
-    background: none;
     cursor: pointer;
     margin: 0 auto;
     display: block;
     text-align: center;
+    background: rgb(245, 245, 245);
+    border-radius: 100px 100px;
+    width: 120px;
+    height: 30px;
+    font-weight: bold;
+}
+
+#add-group-button:hover {
+    background: rgb(99, 245, 86);
+    color: white;
 }
 
 #remove-group {
     border: none;
-    background: none;
     cursor: pointer;
     margin: 0 auto;
     display: block;
     text-align: center;
+    background: rgb(245, 245, 245);
+    border-radius: 100px 100px;
+    width: 160px;
+    height: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#remove-group:hover {
+    background: rgb(250, 113, 82);
+    color: white;
 }
 
 #reset {
     border: none;
-    background: none;
     cursor: pointer;
     margin: 0 auto;
     display: block;
     text-align: center;
-    margin-top: 10px;
-    /* optional: add margin-top for spacing */
+    background: rgb(245, 245, 245);
+    border-radius: 100px 100px;
+    width: 120px;
+    height: 30px;
+    font-weight: bold;
 }
 
-.align-center {
+#reset:hover {
+    background: black;
+    color: white;
+}
+
+.button.delete {
+    border: none;
+    background: rgb(245, 245, 245);
+    cursor: pointer;
+    border-radius: 70%;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.button.delete:hover {
+    background: rgb(250, 113, 82);
+    color: white;
+    /* Background becomes red when button is hovered over */
+}
+
+.button.add {
+    border: none;
+    background: rgb(245, 245, 245);
+    cursor: pointer;
+    border-radius: 70%;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    line-height: 20px;
+    text-align: center;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+.button.add:hover {
+    background: rgb(99, 245, 86);
+    color: white;
+    /* Background becomes red when button is hovered over */
+}
+
+.group-title-div {
     display: flex;
-    justify-content: center;
+    align-items: center;
+}
+
+.link-item {
+    opacity: 1;
+    /* Normal opacity */
+}
+
+.link-item-dragging {
+    opacity: 0.5;
+    /* Opacity when dragging */
+}
+
+.checkbox {
+    margin-right: 10px;
+}
+
+.link-icon {
+    margin-right: 5px;
+    height: 16px;
+    width: 16px;
+}
+
+.link-container {
+    display: flex;
+    align-items: center;
 }

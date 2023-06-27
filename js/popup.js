@@ -39,21 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
         linkDiv.draggable = 'true';
         linkDiv.addEventListener('dragstart', function(event) {
             event.dataTransfer.setData('text', JSON.stringify({ groupId: group.name, linkIndex: index }));
-            linkDiv.style.opacity = '0.5';
+            linkDiv.classList.add('link-item-dragging'); // Add class on drag start
         });
         linkDiv.addEventListener('dragend', function(event) {
-            linkDiv.style.opacity = '';
+            linkDiv.classList.remove('link-item-dragging'); // Remove class on drag end
         });
 
         const linkCheckbox = document.createElement('input');
         linkCheckbox.type = 'checkbox';
-        linkCheckbox.style.marginRight = '10px';
+        linkCheckbox.className = 'checkbox'; // Assign class to linkCheckbox
 
         const linkIcon = document.createElement('img');
         linkIcon.src = `https://www.google.com/s2/favicons?domain=${link.url}`;
-        linkIcon.style.marginRight = '5px';
-        linkIcon.style.height = '16px';
-        linkIcon.style.width = '16px';
+        linkIcon.className = 'link-icon'; // Assign class to linkIcon
 
         const linkText = document.createElement('a');
         linkText.textContent = link.name;
@@ -70,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         const linkContainer = document.createElement('div');
-        linkContainer.style.display = 'flex';
-        linkContainer.style.alignItems = 'center';
+        linkContainer.className = 'link-container';
+
         linkContainer.appendChild(linkCheckbox);
         linkContainer.appendChild(linkIcon);
         linkContainer.appendChild(linkText);
@@ -109,20 +107,61 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         const groupTitleDiv = document.createElement('div');
-        groupTitleDiv.style.display = 'flex';
-        groupTitleDiv.style.justifyContent = 'space-between';
-        groupTitleDiv.style.alignItems = 'center';
+        groupTitleDiv.className = 'group-title-div';
         groupDiv.appendChild(groupTitleDiv);
 
-        const groupTitle = document.createElement('h2');
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'button delete';
+        deleteButton.textContent = 'x';
+
+        deleteButton.addEventListener('click', function() {
+            const groupIndex = groups.findIndex(g => g.name === group.name);
+            if (groupIndex !== -1) {
+                groups.splice(groupIndex, 1);
+            }
+            chrome.storage.sync.set({ 'groups': groups }, function() {
+                displayLinks();
+            });
+        });
+        groupTitleDiv.appendChild(deleteButton);
+
+        const groupTitle = document.createElement('h3');
         groupTitle.textContent = group.name;
         groupTitleDiv.appendChild(groupTitle);
 
+        groupTitle.addEventListener('dblclick', function(e) {
+            const input = document.createElement('input');
+            input.value = group.name;
+            groupTitle.textContent = '';
+            groupTitle.appendChild(input);
+            input.focus();
+
+            input.addEventListener('blur', updateGroupName);
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    updateGroupName();
+                }
+            });
+
+            function updateGroupName() {
+                const newName = input.value;
+                if (!groups.find(g => g.name === newName)) {
+                    const groupIndex = groups.findIndex(g => g.name === group.name);
+                    if (groupIndex !== -1) {
+                        groups[groupIndex].name = newName;
+                        group.name = newName;
+                    }
+                    chrome.storage.sync.set({ 'groups': groups }, function() {
+                        displayLinks();
+                    });
+                }
+            }
+        });
+
         const addButton = document.createElement('button');
+        addButton.className = 'button add';
         addButton.textContent = '+';
-        addButton.style.border = 'none';
-        addButton.style.background = 'none';
-        addButton.style.cursor = 'pointer';
+
         addButton.addEventListener('click', function() {
             const input = prompt('Enter a link and a name for this link, separated by a comma (optional name):');
             if (input) {
