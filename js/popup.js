@@ -161,20 +161,49 @@ document.addEventListener('DOMContentLoaded', function() {
         const addButton = document.createElement('button');
         addButton.className = 'button add';
         addButton.textContent = '+';
+        groupTitleDiv.appendChild(addButton);
 
         addButton.addEventListener('click', function() {
-            const input = prompt('Enter a link and a name for this link, separated by a comma (optional name):');
-            if (input) {
-                let [url, name] = input.split(',').map(item => item.trim());
-                url = correctUrl(url);
+            const linkDiv = document.createElement('div');
+            linkDiv.className = 'link-item';
+
+            const linkContainer = document.createElement('div');
+            linkContainer.className = 'link-container';
+
+            const linkInput = document.createElement('input');
+            linkInput.placeholder = 'Enter a link...';
+            linkContainer.appendChild(linkInput);
+            linkInput.focus();
+
+            linkDiv.appendChild(linkContainer);
+            groupDiv.appendChild(linkDiv);
+
+            linkInput.addEventListener('blur', addLink);
+            linkInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    addLink();
+                }
+            });
+
+            function addLink() {
+                let url = linkInput.value.trim();
                 if (url) {
-                    group.links.push({ url, name: name || url });
+                    url = correctUrl(url);
+                    const name = url;
+                    group.links.push({ url, name });
                     chrome.storage.sync.set({ 'groups': groups }, function() {
                         displayLinks();
                     });
+                } else {
+                    setTimeout(function() {
+                        if (groupDiv.contains(linkDiv)) {
+                            groupDiv.removeChild(linkDiv);
+                        }
+                    }, 0);
                 }
             }
         });
+
         groupTitleDiv.appendChild(addButton);
 
         for (let i = 0; i < group.links.length; i++) {
@@ -234,12 +263,47 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('add-group-button').addEventListener('click', function() {
-        const groupName = prompt('Enter a group name:');
-        if (groupName && !groups.find(g => g.name === groupName)) {
-            groups.push({ name: groupName, links: [] });
-            chrome.storage.sync.set({ 'groups': groups }, function() {
-                displayLinks();
-            });
+        const container = document.getElementById('link-container');
+
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'link-group';
+
+        const groupTitleDiv = document.createElement('div');
+        groupTitleDiv.className = 'group-title-div';
+        groupDiv.appendChild(groupTitleDiv);
+
+        const groupTitle = document.createElement('h3');
+
+        const input = document.createElement('input');
+        input.placeholder = 'Enter a group name...';
+        groupTitle.appendChild(input);
+        input.focus();
+
+        groupTitleDiv.appendChild(groupTitle);
+
+        container.appendChild(groupDiv);
+
+        input.addEventListener('blur', updateGroupName);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                updateGroupName();
+            }
+        });
+
+        function updateGroupName() {
+            const groupName = input.value.trim();
+            if (groupName && !groups.find(g => g.name === groupName)) {
+                groups.push({ name: groupName, links: [] });
+                chrome.storage.sync.set({ 'groups': groups }, function() {
+                    displayLinks();
+                });
+            } else {
+                setTimeout(function() {
+                    if (container.contains(groupDiv)) {
+                        container.removeChild(groupDiv);
+                    }
+                }, 0);
+            }
         }
     });
 });
