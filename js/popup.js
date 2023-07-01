@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         groupTitleDiv.appendChild(deleteButton);
 
-        const groupTitle = document.createElement('h3');
+        const groupTitle = document.createElement('h5');
         groupTitle.textContent = group.name;
         groupTitleDiv.appendChild(groupTitle);
 
@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             linkContainer.className = 'link-container';
 
             const linkInput = document.createElement('input');
+            linkInput.className = "no-border-link"
             linkInput.placeholder = 'Enter a link...';
             linkContainer.appendChild(linkInput);
             linkInput.focus();
@@ -228,10 +229,16 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < groups.length; i++) {
                 const groupDiv = createGroupDiv(groups[i]);
                 container.appendChild(groupDiv);
-            }
 
+                // Check if this is the last group
+                if (i === groups.length - 1) {
+                    // Scroll to the last group
+                    groupDiv.scrollIntoView({ behavior: "smooth", block: "end" });
+                }
+            }
         });
     }
+
 
     window.onload = displayLinks;
 
@@ -272,9 +279,10 @@ document.addEventListener('DOMContentLoaded', function() {
         groupTitleDiv.className = 'group-title-div';
         groupDiv.appendChild(groupTitleDiv);
 
-        const groupTitle = document.createElement('h3');
+        const groupTitle = document.createElement('h5');
 
         const input = document.createElement('input');
+        input.className = "no-border-group"
         input.placeholder = 'Enter a group name...';
         groupTitle.appendChild(input);
         input.focus();

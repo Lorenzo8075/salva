@@ -1,10 +1,36 @@
-.slogan {
+.header h1,
+.header h5 {
+    margin: 0 5px;
+}
+
+hr {
+    border: 2px solid black;
+    width: 99%;
+    margin: auto;
+}
+
+.header-section {
     text-align: center;
+    padding: 1em;
+}
+
+.header-section h1 {
+    margin: 0;
+}
+
+.header-section h5 {
+    margin: 0;
+    font-size: 90%;
+}
+
+.link-group.first-group {
+    margin-bottom: 5px;
 }
 
 body {
     width: 500px;
     font-family: Arial, sans-serif;
+    background-color: #fdf2e7;
 }
 
 .text-salva {
@@ -18,23 +44,50 @@ body {
     margin-right: 10px;
 }
 
+.link-group:last-child {
+    margin-bottom: 150px;
+}
 
-/* #link-container {
+.button-container {
+    display: flex;
+    justify-content: start;
     margin-top: 20px;
-} */
+}
+
+.button-style {
+    width: auto;
+    margin-right: 5px;
+}
+
+.button-style:last-child {
+    margin-right: 0;
+}
 
 .link-group {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
+
+
+/* updated rules for link items */
 
 .link-item {
     cursor: move;
     display: flex;
     align-items: flex-start;
+    margin-bottom: 20px;
+    opacity: 1;
+}
+
+.link-item:not(:last-child) {
+    margin-bottom: 5px;
 }
 
 .link-item:hover .delete-button {
     display: inline;
+}
+
+.link-item-dragging {
+    opacity: 0.5;
 }
 
 .delete-button {
@@ -43,6 +96,7 @@ body {
     border: none;
     background: none;
     cursor: pointer;
+    align-items: center;
 }
 
 #add-link {
@@ -60,10 +114,12 @@ body {
     width: 120px;
     height: 30px;
     font-weight: bold;
+    margin-bottom: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #add-group-button:hover {
-    background: rgb(99, 245, 86);
+    background: #33b249;
     color: white;
 }
 
@@ -79,10 +135,11 @@ body {
     height: 30px;
     font-weight: bold;
     margin-bottom: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #remove-group:hover {
-    background: rgb(250, 113, 82);
+    background: #d11d05;
     color: white;
 }
 
@@ -97,6 +154,7 @@ body {
     width: 120px;
     height: 30px;
     font-weight: bold;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #reset:hover {
@@ -116,12 +174,12 @@ body {
     text-align: center;
     font-size: 12px;
     margin-right: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .button.delete:hover {
     background: rgb(250, 113, 82);
     color: white;
-    /* Background becomes red when button is hovered over */
 }
 
 .button.add {
@@ -136,31 +194,36 @@ body {
     text-align: center;
     font-size: 12px;
     margin-left: auto;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .button.add:hover {
     background: rgb(99, 245, 86);
     color: white;
-    /* Background becomes red when button is hovered over */
 }
 
 .group-title-div {
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
-.link-item {
-    opacity: 1;
-    /* Normal opacity */
+.group-title-div h5 {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    vertical-align: middle;
 }
 
-.link-item-dragging {
-    opacity: 0.5;
-    /* Opacity when dragging */
+.group-title-div button {
+    vertical-align: middle;
 }
 
 .checkbox {
     margin-right: 10px;
+    margin-left: 20px;
 }
 
 .link-icon {
@@ -172,4 +235,25 @@ body {
 .link-container {
     display: flex;
     align-items: center;
+}
+
+.input-group-name,
+.input-link {
+    border: none;
+}
+
+.no-border-link {
+    margin-top: 8px;
+    border: none;
+    margin-left: 30px;
+    font-size: 14px;
+    background-color: #fdf2e7;
+}
+
+.no-border-group {
+    margin-top: 8px;
+    border: none;
+    margin-left: 30px;
+    font-size: 15px;
+    background-color: #fdf2e7;
 }
