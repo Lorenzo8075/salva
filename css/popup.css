@@ -44,6 +44,7 @@ body {
     width: 35px;
     height: auto;
     margin-right: 10px;
+    display: inline-block;
 }
 
 .link-group:last-child {
