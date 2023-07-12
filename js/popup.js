@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const input = document.createElement('input');
         input.className = "no-border-group"
-        input.placeholder = 'Enter a group name...';
+        input.placeholder = 'Enter a workspace...';
         groupTitle.appendChild(input);
         input.focus();
 
