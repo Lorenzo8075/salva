@@ -1,8 +1,3 @@
-.header h1,
-.header h5 {
-    margin: 0 5px;
-}
-
 hr {
     border: 2px solid black;
     width: 99%;
@@ -14,9 +9,15 @@ hr {
     padding: 1em;
 }
 
+
+/* Salva */
+
 .header-section h1 {
     margin: 0;
 }
+
+
+/* Manage all your tabs with one click */
 
 .header-section h5 {
     margin: 0;
@@ -256,4 +257,10 @@ body {
     margin-left: 30px;
     font-size: 15px;
     background-color: #fdf2e7;
+}
+
+input {
+    background-color: #fdf2e7 !important;
+    outline: none;
+    border: none;
 }

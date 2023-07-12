@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             function updateGroupName() {
+                groupTitle.classList.remove('group-title-div');
                 const newName = input.value;
                 if (!groups.find(g => g.name === newName)) {
                     const groupIndex = groups.findIndex(g => g.name === group.name);
@@ -151,6 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         groups[groupIndex].name = newName;
                         group.name = newName;
                     }
+
                     chrome.storage.sync.set({ 'groups': groups }, function() {
                         displayLinks();
                     });
