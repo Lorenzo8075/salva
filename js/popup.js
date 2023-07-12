@@ -39,21 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
         linkDiv.draggable = 'true';
         linkDiv.addEventListener('dragstart', function(event) {
             event.dataTransfer.setData('text', JSON.stringify({ groupId: group.name, linkIndex: index }));
-            linkDiv.style.opacity = '0.5';
+            linkDiv.classList.add('link-item-dragging'); // Add class on drag start
         });
         linkDiv.addEventListener('dragend', function(event) {
-            linkDiv.style.opacity = '';
+            linkDiv.classList.remove('link-item-dragging'); // Remove class on drag end
         });
 
         const linkCheckbox = document.createElement('input');
         linkCheckbox.type = 'checkbox';
-        linkCheckbox.style.marginRight = '10px';
+        linkCheckbox.className = 'checkbox'; // Assign class to linkCheckbox
 
         const linkIcon = document.createElement('img');
         linkIcon.src = `https://www.google.com/s2/favicons?domain=${link.url}`;
-        linkIcon.style.marginRight = '5px';
-        linkIcon.style.height = '16px';
-        linkIcon.style.width = '16px';
+        linkIcon.className = 'link-icon'; // Assign class to linkIcon
 
         const linkText = document.createElement('a');
         linkText.textContent = link.name;
@@ -70,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         const linkContainer = document.createElement('div');
-        linkContainer.style.display = 'flex';
-        linkContainer.style.alignItems = 'center';
+        linkContainer.className = 'link-container';
+
         linkContainer.appendChild(linkCheckbox);
         linkContainer.appendChild(linkIcon);
         linkContainer.appendChild(linkText);
@@ -109,33 +107,106 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         const groupTitleDiv = document.createElement('div');
-        groupTitleDiv.style.display = 'flex';
-        groupTitleDiv.style.justifyContent = 'space-between';
-        groupTitleDiv.style.alignItems = 'center';
+        groupTitleDiv.className = 'group-title-div';
         groupDiv.appendChild(groupTitleDiv);
 
-        const groupTitle = document.createElement('h2');
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'button delete';
+        deleteButton.textContent = 'x';
+
+        deleteButton.addEventListener('click', function() {
+            const groupIndex = groups.findIndex(g => g.name === group.name);
+            if (groupIndex !== -1) {
+                groups.splice(groupIndex, 1);
+            }
+            chrome.storage.sync.set({ 'groups': groups }, function() {
+                displayLinks();
+            });
+        });
+        groupTitleDiv.appendChild(deleteButton);
+
+        const groupTitle = document.createElement('h5');
         groupTitle.textContent = group.name;
         groupTitleDiv.appendChild(groupTitle);
 
-        const addButton = document.createElement('button');
-        addButton.textContent = '+';
-        addButton.style.border = 'none';
-        addButton.style.background = 'none';
-        addButton.style.cursor = 'pointer';
-        addButton.addEventListener('click', function() {
-            const input = prompt('Enter a link and a name for this link, separated by a comma (optional name):');
-            if (input) {
-                let [url, name] = input.split(',').map(item => item.trim());
-                url = correctUrl(url);
-                if (url) {
-                    group.links.push({ url, name: name || url });
+        groupTitle.addEventListener('dblclick', function(e) {
+            const input = document.createElement('input');
+            input.value = group.name;
+            groupTitle.textContent = '';
+            groupTitle.appendChild(input);
+            input.focus();
+
+            input.addEventListener('blur', updateGroupName);
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    updateGroupName();
+                }
+            });
+
+            function updateGroupName() {
+                groupTitle.classList.remove('group-title-div');
+                const newName = input.value;
+                if (!groups.find(g => g.name === newName)) {
+                    const groupIndex = groups.findIndex(g => g.name === group.name);
+                    if (groupIndex !== -1) {
+                        groups[groupIndex].name = newName;
+                        group.name = newName;
+                    }
+
                     chrome.storage.sync.set({ 'groups': groups }, function() {
                         displayLinks();
                     });
                 }
             }
         });
+
+        const addButton = document.createElement('button');
+        addButton.className = 'button add';
+        addButton.textContent = '+';
+        groupTitleDiv.appendChild(addButton);
+
+        addButton.addEventListener('click', function() {
+            const linkDiv = document.createElement('div');
+            linkDiv.className = 'link-item';
+
+            const linkContainer = document.createElement('div');
+            linkContainer.className = 'link-container';
+
+            const linkInput = document.createElement('input');
+            linkInput.className = "no-border-link"
+            linkInput.placeholder = 'Enter a link...';
+            linkContainer.appendChild(linkInput);
+            linkInput.focus();
+
+            linkDiv.appendChild(linkContainer);
+            groupDiv.appendChild(linkDiv);
+
+            linkInput.addEventListener('blur', addLink);
+            linkInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    addLink();
+                }
+            });
+
+            function addLink() {
+                let url = linkInput.value.trim();
+                if (url) {
+                    url = correctUrl(url);
+                    const name = url;
+                    group.links.push({ url, name });
+                    chrome.storage.sync.set({ 'groups': groups }, function() {
+                        displayLinks();
+                    });
+                } else {
+                    setTimeout(function() {
+                        if (groupDiv.contains(linkDiv)) {
+                            groupDiv.removeChild(linkDiv);
+                        }
+                    }, 0);
+                }
+            }
+        });
+
         groupTitleDiv.appendChild(addButton);
 
         for (let i = 0; i < group.links.length; i++) {
@@ -160,10 +231,16 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < groups.length; i++) {
                 const groupDiv = createGroupDiv(groups[i]);
                 container.appendChild(groupDiv);
-            }
 
+                // Check if this is the last group
+                if (i === groups.length - 1) {
+                    // Scroll to the last group
+                    groupDiv.scrollIntoView({ behavior: "smooth", block: "end" });
+                }
+            }
         });
     }
+
 
     window.onload = displayLinks;
 
@@ -195,12 +272,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('add-group-button').addEventListener('click', function() {
-        const groupName = prompt('Enter a group name:');
-        if (groupName && !groups.find(g => g.name === groupName)) {
-            groups.push({ name: groupName, links: [] });
-            chrome.storage.sync.set({ 'groups': groups }, function() {
-                displayLinks();
-            });
+        const container = document.getElementById('link-container');
+
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'link-group';
+
+        const groupTitleDiv = document.createElement('div');
+        groupTitleDiv.className = 'group-title-div';
+        groupDiv.appendChild(groupTitleDiv);
+
+        const groupTitle = document.createElement('h5');
+
+        const input = document.createElement('input');
+        input.className = "no-border-group"
+        input.placeholder = 'Enter a group name...';
+        groupTitle.appendChild(input);
+        input.focus();
+
+        groupTitleDiv.appendChild(groupTitle);
+
+        container.appendChild(groupDiv);
+
+        input.addEventListener('blur', updateGroupName);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                updateGroupName();
+            }
+        });
+
+        function updateGroupName() {
+            const groupName = input.value.trim();
+            if (groupName && !groups.find(g => g.name === groupName)) {
+                groups.push({ name: groupName, links: [] });
+                chrome.storage.sync.set({ 'groups': groups }, function() {
+                    displayLinks();
+                });
+            } else {
+                setTimeout(function() {
+                    if (container.contains(groupDiv)) {
+                        container.removeChild(groupDiv);
+                    }
+                }, 0);
+            }
         }
     });
 });
